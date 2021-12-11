@@ -1,0 +1,99 @@
+{% extends '@AdminLTE/layout/default-layout.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %} {{ app.user.username |capitalize }}{% endblock %}
+{% block page_subtitle %}{% endblock %}
+
+{% block logo_large %}
+    <div class="row"> <img src="{{ asset('images/bidding.jpg') }}" class="logo"> </div>
+{% endblock %}
+
+{% block navbar_user %}
+    <div class="navbar-custom-menu" style="margin-top: 12px; margin-right: 25px; color: white;" >
+        <ul class="nav navbar-nav">
+            <span class="glyphicon glyphicon-user"></span> {{ app.user.username |capitalize }} &nbsp; &nbsp;
+            <a href="{{ path('app_logout') }}" style="color: white;">
+                <span class="glyphicon glyphicon-log-out"></span> Log out
+            </a>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block sidebar_nav %}
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('homepage') }}">Offers</a></h2><hr>
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('listproducts') }}">Products</a></h2><hr>
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('product') }}">Add Product</a></h2><hr>
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('adding_user') }}">Create Admin</a></h2><hr>
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('listuser') }}">Admin List</a></h2><hr>
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('change') }}">Change Password</a></h2><hr>
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-6" id="wls">
+            {# ... box widget with some options ... #}
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' with {
+                'boxtype' : 'gray',
+                'solid' : 0,
+                'collapsible' : 'widget-box.collapse'|trans ~ '... ',
+                'removable' : 'widget-box.remove'|trans ~ '...',
+            } %}
+
+                {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+                {% block box_title %}List of products{% endblock %}
+                {% block box_body %}
+                <div class="layout-top-nav">
+                <button onclick="showActive()" class="btn btn-info active-product">Active</button>
+                <button onclick="showSold()" class="btn btn-info sold-product">Sold</button>
+                <div class="callout callout-default" id="active" style="display: block;">
+                    <div class="callout callout-default">
+                        {% for wl in wls %}
+                            {% if wl.status.getProductStatus() == 'Active' %}
+                                <ul class="list-group">
+                                    <li class="list-group-item list-group-item-secondary">
+                                        <p><b>Product name:</b>{{ wl.productname }}
+                                        <p><b>Details:</b> {{ wl.description }} </p>
+                                        <p><b>Delivery time:</b> {{ wl.deliverytime }} </p>
+                                         <p><b>Starting price:</b> {{ (wl.getStartingPrice()/100)|number_format(2, '.', ',')}} {{wl.getCurrency().getCurrency()}} </p>
+                                         <p><b>Expires at:</b> {{ wl.expiresAt|date('Y-m-d H:i:s')  }} </p>
+                                         <p><img src="{{ asset(wl.getImagePath()) }}" width="100" height="100"  alt="photo"></p>
+                                        <div>
+                                            <a href="/welcome/editproduct/{{ wl.getId() }}" class="btn btn-danger">Edit</a>
+                                            <a href="#" class="btn btn-success sold-product" data-id="{{ wl.getId() }}">Sold</a>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="callout callout-default" id="sold" style="display: none;">
+                    <div class="callout callout-default">
+                        {% for wl in wls %}
+                            {% if wl.status.getProductStatus() == 'Sold' %}
+                                <ul class="list-group">
+                                    <li class="list-group-item list-group-item-secondary">
+                                         <p><b>Product name:</b>{{ wl.productname }}
+                                        <p><b>Details:</b> {{ wl.description }} </p>
+                                        <p><b>Delivery time:</b> {{ wl.deliverytime }} </p>
+                                         <p><b>Starting price:</b> {{ wl.getStartingPrice()/100|number_format(2, '.', ',')}} {{wl.getCurrency().getCurrency()}} </p>
+                                         <p><b>Expires at:</b> {{ wl.expiresAt|date('Y-m-d H:i:s')  }} </p>
+                                         <p><img src="{{ asset(wl.getImagePath()) }}" width="100" height="100"  alt="photo"></p>
+                                    </li>
+                                </ul>
+
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+               </div> 
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{asset('assets/js/mainproduct.js')}}"></script>
+{% endblock %}

@@ -1,0 +1,177 @@
+{% block stylesheet %}
+
+    <title>{% block title %}Aucton offer{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('css/form.css') }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <title>Auction web app</title>
+
+
+    <link rel="stylesheet" href="{{ asset('css/fontawesome.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/templatemo-sixteen.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/owl.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/button.css') }}">
+
+    <!-- Additional Scripts -->
+    <script src="{{ asset('assets/js/custom.js') }}"></script>
+    <script src="{{ asset('assets/js/owl.js') }}"></script>
+    <script src="{{ asset('assets/js/slick.js') }}"></script>
+    <script src="{{ asset('assets/js/isotope.js') }}"></script>
+    <script src="{{ asset('assets/js/accordions.js') }}"></script>
+    
+{% endblock %}
+
+
+{% block navbar %}
+
+ <div id="preloader">
+        <div class="jumper">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>  
+    <!-- ***** Preloader End ***** -->
+
+    <!-- Header -->
+    <header class="">
+      <nav class="navbar navbar-expand-lg">
+        <div class="container">
+          <a class="navbar-brand" href="{{ path('frontpage') }}"><h2>Auctions of <em>Antiques</em></h2></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="{{ path('frontpage') }}">Homepage</a>               
+              </li> 
+            {% if is_granted('ROLE_USER') %}
+                <li class="nav-item">
+                <a class="nav-link" href="{{ path('alloffers') }}">My Offers</a>
+              </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
+              </li>
+                {% else %}
+			          <li class="nav-item">
+                <a class="nav-link" href="{{ path('login') }}">Login</a>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+       {% for message in app.flashes('offer') %}
+            <div class="alert alert-warning">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('offer-sent') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </header>
+{% endblock %}
+
+{% block body %}
+    <br><br><br><br><br><br><br>
+    <div class="row justify-content-center">  
+     <div class="col-md-6" >   
+          <div class="col-md-8">
+            <div class="product-item" style="text-align: center;" >              
+              <img src="{{ asset(product.getImagePath()) }}"  alt="photo">
+              <div class="down-content">
+                <h4><strong>{{ product.productname }} </strong></h4>
+                <h7><b>Details:</b> {{ product.description }} </h7><br>
+                <h7><b>Delivery time: </b>{{ product.deliverytime }} </h7><br><br>
+                <h7><b>Expires at:</b> {{ product.expiresAt|date('Y-m-d H:i:s')  }} </h7><br>
+                <h7><b>Starting price:</b> {{ (product.getStartingPrice()/100)|number_format(2, '.', ',') }} {{product.getCurrency().getCurrency()}} </h7><br><br>
+              </div>
+            </div>
+          </div>
+                <form id="formElem">
+                     <div class="col-md-8" >   
+                    <div class="card2 card border-0 px-4 py-5">
+                        <h3 class="panel-title" style="text-align: center;">Auction offer</h3>
+                        <div class="row px-3">
+                            <label for="offer">OFFER IN {{product.getCurrency().getCurrency()}}</label>
+                            <input type="number" name="offer" id="offer" min="{{product.getStartingPrice()}}" class="form-control"><br>
+                        </div>     
+                    </div> 
+                    <div class="button-center">
+                          <a href="#"  class="btn btn-blue text-center"data-id="{{ product.getId() }}">Send</a>
+                      </div>
+                    </div>
+                    </div>
+                    <div>
+                </form>
+                </div>
+               </div>
+               <br><br><br>
+		<div class="container">
+			<div class="row">
+      	<div class="col-lg-1"></div>
+				<div class="col-lg-7">
+        <h2 class="heading-section" style="width: 50%; margin-left: 30%; margin-right: 30%;color:#28589c;">Latest offers</h2><br>
+					<div class="table-wrap">
+						<table class="table table-hover" >
+						  <thead class="thead-primary" style="color:#28589c;">
+						    <tr>
+						    <th>Offer</th>
+                <th>Time</th>
+						    </tr>
+						  </thead>
+						  <tbody>
+              {% for of in ofs %}
+						    <tr>
+						      <td> {{ (of.offer/100)|number_format(2, '.', ',') }}{{of.getCurrency().getCurrency()}}</td>
+                   <td>{{ of.time|date('Y-m-d H:i:s')  }} </td>   
+						    </tr>
+                 {% endfor  %}
+						  </tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+   </div>
+  </div>
+{% endblock %}
+{% block footer %}
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="inner-content">
+              <p> &copy; 2021 Diplomski rad         
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script language = "text/Javascript"> 
+      cleared[0] = cleared[1] = cleared[2] = 0; //set a cleared flag for each field
+      function clearField(t){                   //declaring the array outside of the
+      if(! cleared[t.id]){                      // function makes it static and global
+          cleared[t.id] = 1;  // you could use true and false, but that's more typing
+          t.value='';         // with more chance of typos
+          t.style.color='#fff';
+          }
+      }
+    </script> 
+        
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{asset('assets/js/post.js')}}"></script>
+{% endblock %}               

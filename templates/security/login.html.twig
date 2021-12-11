@@ -1,0 +1,105 @@
+{% block stylesheets %}
+
+        <title>{% block title %}Login{% endblock %}</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/owl.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/fontawesome.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/button.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/templatemo-sixteen.css') }}">
+
+        <script src="{{ asset('assets/js/custom.js') }}"></script>
+        <script src="{{ asset('assets/js/owl.js') }}"></script>
+        <script src="{{ asset('assets/js/slick.js') }}"></script>
+        <script src="{{ asset('assets/js/isotope.js') }}"></script>
+        <script src="{{ asset('assets/js/accordions.js') }}"></script>
+
+{% endblock %}
+
+{% block navbar %}
+   <div id="preloader">
+        <div class="jumper">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>  
+    <header class="">
+      <nav class="navbar navbar-expand-lg">
+        <div class="container">
+          <a class="navbar-brand" href="{{ path('frontpage') }}"><h2>Auctions  <em>Web App</em></h2></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item ">
+                <a class="nav-link" href="{{ path('frontpage') }}">Homepage</a>               
+              </li> 
+			     <li class="nav-item">
+                <a class="nav-link" href="{{ path('login') }}">Login</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+{% endblock %}
+
+{% block body %}
+<section class="ftco-section">
+			<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-md-7 col-lg-5">
+					<div class="login-wrap p-4 p-md-5">
+		      	<div class="icon d-flex align-items-center justify-content-center">
+		      		
+		      	</div>
+		      	<h3 class="text-center mb-4">Sign In</h3>
+						<form method="post" class="login-form">
+             {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+               {% endif %}
+		      		<div class="form-group">
+                 <input type="text" value="{{ last_username }}" placeholder="Enter a valid username" name="username" id="inputUsername" class="form-control rounded-left" required >
+		      		</div>
+	            <div class="form-group d-flex">
+                <input type="password" placeholder="Enter password" name="password" id="inputPassword" class="form-control rounded-left" required>
+	            </div>
+	            <div class="form-group">
+	            	<button type="submit" class="form-control btn btn-primary rounded submit px-3">Login</button>
+	            </div>
+	            <div class="form-group d-md-flex">
+	            	<div class="custom-control-inline">
+                <input id="chk1" type="checkbox" name="_remember_me"> 
+	            		<label for="chk1" class="checkbox-wrap checkbox-primary custom-control-inline">Remember Me
+									</label>
+								</div>
+								<div class="w-50 text-md-right">
+									<a href="{{ path('app_forgot_password_request') }}">Forgot Password</a>
+								</div>
+	            </div>
+              	<div class="w-100 text-md-center">
+	            	<a href="{{ path('user_registration') }}">Don't have an account? Register one!</a>
+	            </div>
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">                                            
+	          </form>
+	        </div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

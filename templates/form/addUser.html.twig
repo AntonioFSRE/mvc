@@ -1,0 +1,56 @@
+{% extends '@AdminLTE/layout/default-layout.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %} {{ app.user.username |capitalize }}{% endblock %}
+{% block page_subtitle %}{% endblock %}
+
+{% block logo_large %}
+    <div class="row"> <img src="{{ asset('images/bidding.jpg') }}" class="logo"> </div>
+{% endblock %}
+
+{% block navbar_user %}
+    <div class="navbar-custom-menu" style="margin-top: 12px; margin-right: 25px; color: white;" >
+        <ul class="nav navbar-nav">
+            <span class="glyphicon glyphicon-user"></span> {{ app.user.username |capitalize }} &nbsp; &nbsp;
+            <a href="{{ path('app_logout') }}" style="color: white;">
+                <span class="glyphicon glyphicon-log-out"></span> Log out
+            </a>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block sidebar_nav %}
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('homepage') }}">Offers</a></h2><hr>
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('listproducts') }}">Products</a></h2><hr>
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('product') }}">Add Product</a></h2><hr>
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('adding_user') }}">Create Admin</a></h2><hr>
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('listuser') }}">Admin List</a></h2><hr>
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('change') }}">Change Password</a></h2><hr>
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-6" id="cvs">
+            {# ... box widget with some options ... #}
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' with {
+                'boxtype' : 'gray',
+                'solid' : 0
+            } %}
+
+                {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+                {% block box_title %}Add User{% endblock %}
+                {% block box_body %}
+                    {{ form_start(form) }}
+                    {{ form_row(form.username) }}
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.first_name) }}
+                    {{ form_row(form.last_name) }}
+                    {{ form_row(form.address) }}
+                    <button type="submit" class="btn btn-info">Add User</button>
+                    {{ form_end(form) }}
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+{% endblock %}
+

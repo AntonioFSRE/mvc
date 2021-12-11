@@ -1,0 +1,131 @@
+{% extends '@AdminLTE/layout/default-layout.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %} {% endblock %}
+{% block page_subtitle %}{% endblock %}
+
+{% block logo_large %}
+    <div class="row"> <img src="{{ asset('images/bidding.jpg') }}" class="logo"> </div>
+{% endblock %}
+
+
+{% block navbar_user %}
+    <div class="navbar-custom-menu" style="margin-top: 12px; margin-right: 25px; color: white;" >
+        <ul class="nav navbar-nav">
+            <span class="glyphicon glyphicon-user"></span> {{ app.user.username |capitalize }} &nbsp; &nbsp;
+            <a href="{{ path('app_logout') }}" style="color: white;">
+                <span class="glyphicon glyphicon-log-out"></span> Log out
+            </a>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block sidebar_nav %}
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('homepage') }}">Offers</a></h2><hr>
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('listproducts') }}">Products</a></h2><hr>
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('product') }}">Add Product</a></h2><hr>
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('adding_user') }}">Create Admin</a></h2><hr>
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('listuser') }}">Admin List</a></h2><hr>
+    <h2 style="color: white; margin-left: 30px;"><a href="{{ path('change') }}">Change Password</a></h2><hr>
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-6" id="cvs">
+            {# ... box widget with some options ... #}
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' with {
+                'boxtype' : 'gray',
+                'solid' : 0,
+                'collapsible' : 'widget-box.collapse'|trans ~ '... ',
+                'removable' : 'widget-box.remove'|trans ~ '...',
+            } %}
+
+                {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+                {% block box_title %}Auction Offers{% endblock %}
+                {% block box_body %}
+                <div class="layout-top-nav">
+                <button onclick="showActive()" class="btn btn-info active-article">Open</button>
+                <button onclick="showAccepted()" class="btn btn-info accepted-article">Accepted</button>
+                <button onclick="showRejected()" class="btn btn-info rejected-article">Rejected</button>
+                <div class="callout callout-default" id="active" style="display: block;">
+                    <div class="callout callout-default">
+                        {% for cv in cvs %}
+                            {% if cv.status.getOfferStatus() == 'Open' %}
+                                <ul class="list-group">
+                                    <li class="list-group-item list-group-item-secondary">
+                                        <p><b>Username: </b>{{ cv.user.username }}</p>
+                                        <p><b>First name: </b>{{ cv.user.firstname }} </p>
+                                        <p><b>Last name: </b>{{ cv.user.lastname }} </p>
+                                        <p><b>Email: </b>{{ cv.user.email }} </p>
+                                        <p><b>Address: </b>{{ cv.user.address }} </p>
+                                        <p><b>Offer: </b>{{ (cv.offer/100)|number_format(2, '.', ',')}} {{cv.getCurrency().getCurrency()}} </p>  
+                                        <p><b>Time: </b>{{ cv.time|date('Y-m-d H:i:s')  }} </p>                                                                         
+                                         <p><b>Product: </b> {{cv.getProduct().getProductName() }}</p>
+                                        <div>
+                                            <a href="#" class="btn btn-danger reject-article" data-id="{{ cv.getId() }}">Reject</a>
+                                            <a href="#" class="btn btn-success accept-article" data-id="{{ cv.getId() }}">Accept</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="callout callout-default" id="accepted" style="display: none;">
+                    <div class="callout callout-default">
+                        {% for cv in cvs %}
+                            {% if cv.status.getOfferStatus() == 'Accepted' %}
+                                <ul class="list-group">
+                                    <li class="list-group-item list-group-item-secondary">
+                                         <p><b>Username: </b>{{ cv.user.username }}</p>
+                                        <p><b>First name: </b>{{ cv.user.firstname }} </p>
+                                        <p><b>Last name: </b>{{ cv.user.lastname }} </p>
+                                        <p><b>Email: </b>{{ cv.user.email }} </p>
+                                        <p><b>Address: </b>{{ cv.user.address }} </p>
+                                        <p><b>Offer: </b>{{ (cv.offer/100)|number_format(2, '.', ',')}} {{cv.getCurrency().getCurrency()}} </p>  
+                                        <p><b>Time: </b>{{ cv.time|date('Y-m-d H:i:s')  }} </p>                                                                         
+                                         <p><b>Product: </b> {{cv.getProduct().getProductName() }}</p>
+                                        <div>
+                                            <a href="#" class="btn btn-success activate-article" data-id="{{ cv.getId() }}">Re-open</a>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="callout callout-default" id="rejected" style="display: none;">
+                    <div class="callout callout-default">
+                        {% for cv in cvs %}
+                            {% if cv.status.getOfferStatus() == 'Rejected' %}
+                                <ul class="list-group">
+                                    <li class="list-group-item list-group-item-secondary">
+                                        <p><b>Username: </b>{{ cv.user.username }}</p>
+                                        <p><b>First name: </b>{{ cv.user.firstname }} </p>
+                                        <p><b>Last name: </b>{{ cv.user.lastname }} </p>
+                                        <p><b>Email: </b>{{ cv.user.email }} </p>
+                                        <p><b>Address: </b>{{ cv.user.address }} </p>
+                                        <p><b>Offer: </b>{{ (cv.offer/100)|number_format(2, '.', ',')}} {{cv.getCurrency().getCurrency()}} </p>  
+                                        <p><b>Time: </b>{{ cv.time|date('Y-m-d H:i:s')  }} </p>                                                                         
+                                         <p><b>Product: </b> {{cv.getProduct().getProductName() }}</p>
+                                         <div>
+                                            <a href="#" class="btn btn-success activate-article" data-id="{{ cv.getId() }}">Re-open</a>
+                                        </div> 
+                                    </li>
+                                </ul>
+
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+               </div> 
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{asset('assets/js/main.js')}}"></script>
+{% endblock %}
