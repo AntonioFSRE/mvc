@@ -1,9 +1,9 @@
 export PROJECT_IP = 127.0.0.1
-export PROJECT_NAME = globalsoft-mvc
+export PROJECT_NAME = mvc
 
 DOCKER_COMPOSE = docker-compose
-SYMFONY_CONSOLE = docker exec globalsoft-mvc-php php bin/console
-PHP = docker exec -it globalsoft-mvc-php
+SYMFONY_CONSOLE = docker exec mvc-php php bin/console
+PHP = docker exec -it mvc-php
 
 .PHONY: start
 start:  ##@development bring up dev environment
